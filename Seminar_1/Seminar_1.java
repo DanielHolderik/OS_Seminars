@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class TestProcessBuilder {
+public class Seminar_1 {
 
     static void createProcess(String command) throws java.io.IOException {
 
@@ -40,7 +40,7 @@ public class TestProcessBuilder {
         while (true) {
                System.out.print("jsh>");
             commandLine = scanner.nextLine();
-            // if user entered a return, just loop again
+          
             if (commandLine.equals("")) {
                 continue;
             }
