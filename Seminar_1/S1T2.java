@@ -3,10 +3,10 @@ import java.util.*;
 
 public class S1T2 {
 
-    static void createProcess(String command) throws java.io.IOException {
+    static void createProcess(String command, List<String> errorLog) throws java.io.IOException {
 
         List<String> input = Arrays.asList(command.split(" "));
-        List<String> showerrlog = Arrays.asList(command);
+        // List<String> e = Arrays.asList(command);
 
         ProcessBuilder processBuilder = new ProcessBuilder(input);
         BufferedReader bufferReader = null;
@@ -24,7 +24,7 @@ public class S1T2 {
             bufferReader.close();
         } catch (java.io.IOException ioe) {
             System.err.println(" Invalid Command ");
-            showerrlog.add(command + "; ");
+            errorLog.add(command + "; ");
         } finally {
             if (bufferReader != null) {
                 bufferReader.close();
@@ -34,13 +34,13 @@ public class S1T2 {
 
     public static void main(String[] args) throws java.io.IOException {
         String commandLine;
-        List<String> showerrlog = Arrays.asList();
+        List<String> errorLog = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n\n***** Welcome to the Java Command Shell *****");
         System.out.println("If you want to exit the shell, type END and press RETURN.\n");
     
         while (true) {
-               System.out.print("jsh>");
+               System.out.print("Type_Commands >");
             commandLine = scanner.nextLine();
           
             if (commandLine.equals("")) {
@@ -48,8 +48,9 @@ public class S1T2 {
             
             }
             if (commandLine.toLowerCase().equals("showerrlog")){
-                for (String string : showerrlog) {
-                    System.err.println(string + "\n");
+                for (String string : errorLog) {
+                    System.out.println(string);
+                    continue;
                 }
             }
             if (commandLine.toLowerCase().equals("end")) {
@@ -57,7 +58,7 @@ public class S1T2 {
                 scanner.close();
                 System.exit(0);
             }
-            createProcess(commandLine);
+            createProcess(commandLine, errorLog);
         }   
     }
    
