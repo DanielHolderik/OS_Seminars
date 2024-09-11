@@ -1,7 +1,3 @@
-import java.io.*;
-import java.util.*;
-import java.lang.*;
-
 public class S1T3 implements Runnable{
     
 
@@ -23,10 +19,11 @@ public class S1T3 implements Runnable{
         System.out.println("Stopwatch reached 60 seconds, joining threads... ");
     } 
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException{
 
     S1T3 stopWatch = new S1T3();
     Thread thread = new Thread(stopWatch);
     thread.start();
+    thread.join();
     }
 }
