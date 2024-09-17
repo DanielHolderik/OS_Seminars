@@ -1,4 +1,4 @@
-package readerwriter;
+package readerwriter1;
 
 public class RWLock {
 

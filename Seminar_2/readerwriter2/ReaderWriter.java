@@ -1,4 +1,4 @@
-package readerwriter;
+package readerwriter2;
 
 public class ReaderWriter {
 
