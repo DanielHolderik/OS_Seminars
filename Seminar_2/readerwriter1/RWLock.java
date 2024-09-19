@@ -11,7 +11,7 @@ public class RWLock {
     }
 
     public synchronized void acquireRead(){
-        while (isWriting || writersQueue != 0){
+        while (isWriting){
             try {
                 wait();
             } catch (InterruptedException e){
