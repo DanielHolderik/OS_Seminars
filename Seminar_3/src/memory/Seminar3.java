@@ -2,7 +2,8 @@ package memory;
 
 public class Seminar3 {
 
-	private static final String BACKING_STORE_FILE = "resources/BACKING_STORE.bin";
+	private static final String BACKING_STORE_FILE = "C:/Programming/Java/OS_Seminars/Seminar_3/resources/BACKING_STORE.bin";
+	//had to give the full path since relative paths didnt work for me --_(._.)_--
 
 	private static final int PAGE_SIZE = 256;
 	private static final int NUMBER_OF_PAGES = 256;
@@ -29,7 +30,8 @@ public class Seminar3 {
 	{
 		System.out.println("Testing task one\n");
 		MemoryManager memoryManager = new MemoryManager(NUMBER_OF_PAGES, PAGE_SIZE, NUMBER_OF_FRAMES_256, BACKING_STORE_FILE, NO_PAGE_REPLACEMENT);
-		MemoryProcess mp = new MemoryProcess("resources/addresses.txt", memoryManager);
+		MemoryProcess mp = new MemoryProcess("C:/Programming/Java/OS_Seminars/Seminar_3/resources/addresses.txt", memoryManager); 
+		//had to give the full path since relative paths didnt work for me --_(._.)_--
 		mp.callMemory();
 		
 		int numberOfPageFaults =  memoryManager.getNumberOfPageFaults();
@@ -103,7 +105,7 @@ public class Seminar3 {
 	private static int getNumberOfPageFaultsFifo(int numberOfFrames)
 	{
 		MemoryManager memoryManager = new MemoryManager(NUMBER_OF_PAGES, PAGE_SIZE, numberOfFrames, BACKING_STORE_FILE, FIFO_PAGE_REPLACEMENT);
-		MemoryProcess mp = new MemoryProcess("resources/addresses.txt", memoryManager);
+		MemoryProcess mp = new MemoryProcess("C:/Programming/Java/OS_Seminars/Seminar_3/resources/addresses.txt", memoryManager);
 		mp.callMemory();
 		
 		return memoryManager.getNumberOfPageFaults();
@@ -113,7 +115,7 @@ public class Seminar3 {
 	private static int getNumberOfPageFaultsLRU(int numberOfFrames)
 	{
 		MemoryManager memoryManager = new MemoryManager(NUMBER_OF_PAGES, PAGE_SIZE, numberOfFrames, BACKING_STORE_FILE, LRU_PAGE_REPLACEMENT);
-		MemoryProcess mp = new MemoryProcess("resources/addresses.txt", memoryManager);
+		MemoryProcess mp = new MemoryProcess("C:/Programming/Java/OS_Seminars/Seminar_3/resources/addresses.txt", memoryManager);
 		mp.callMemory();
 		
 		return memoryManager.getNumberOfPageFaults();

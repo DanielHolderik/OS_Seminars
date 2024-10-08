@@ -3,6 +3,8 @@ package memory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class MemoryManager {
 
@@ -15,6 +17,7 @@ public class MemoryManager {
 	private int myNextFreeFramePosition = 0;
 	private int myNumberOfpageFaults = 0;
 	private int myPageReplacementAlgorithm = 0;
+	private Queue<Integer> fifoQ = new LinkedList<>();
 
 	public MemoryManager(int numberOfPages, int pageSize, int numberOfFrames, String pageFile,
 			int pageReplacementAlgorithm) {
@@ -62,13 +65,18 @@ public class MemoryManager {
 	}
 
 	private int getPageNumber(int logicalAddress) {
-		// Implement by student in task one
-		return 0;
+		//int pageNr = logicalAddress / 256;
+		int pageNr = logicalAddress / myPageSize;
+		// we divide by page size to get the page Number
+		return pageNr;
 	}
 
 	private int getPageOffset(int logicalAddress) {
-		// Implement by student in task one
-		return 0;
+		//int pageOfst = logicalAddress % 256;
+		int pageOfst = logicalAddress % myPageSize;
+		// by doing a modulo calculation we will get how many bytes
+		// into a page the information we are looking for starts
+		return pageOfst;
 	}
 
 	private void pageFault(int pageNumber) {
@@ -100,19 +108,42 @@ public class MemoryManager {
 	}
 
 	private void handlePageFault(int pageNumber) {
-		// Implement by student in task one
-		// This is the simple case where we assume same size of physical and logical
-		// memory
-		// nextFreeFramePosition is used to point to next free frame position
+        int frame = getFreeFrame();
 
+        if (frame == -1) {
+            frame = performPageReplacement(pageNumber);
+        }
+        myPageTable[pageNumber] = frame;
+		readFromPageFileToMemory(pageNumber);
+
+        myNumberOfpageFaults++;
+    }
+	
+	private int getFreeFrame() {
+        if (myNextFreeFramePosition < myNumberOfFrames) {
+            return myNextFreeFramePosition++; // take the frame and increment it
+        } else {
+            return -1; // no space available
+        }
+    }
+	private int performPageReplacement(int pageNumber) {
+        
+        return 0;
 	}
-
 	private void handlePageFaultFIFO(int pageNumber) {
-		// Implement by student in task two
-		// this solution allows different size of physical and logical memory
-		// page replacement using FIFO
-		// Note depending on your solution, you might need to change parts of the
-		// supplied code, this is allowed.
+		int frame = getFreeFrame();
+		
+		if (frame == -1){
+			int firstIn = fifoQ.poll();
+			frame = myPageTable[firstIn]; // get the frame of the oldest element
+			myPageTable[firstIn] = -1;    // make the page unavailable
+		}
+		// now load the page into the free frame
+		myPageTable[pageNumber] = frame;
+		fifoQ.add(pageNumber);         
+		readFromPageFileToMemory(pageNumber);  
+	
+		myNumberOfpageFaults++;  
 	}
 
 	private void handlePageFaultLRU(int pageNumber) {
