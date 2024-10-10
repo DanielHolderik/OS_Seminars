@@ -3,7 +3,9 @@ package memory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 public class MemoryManager {
@@ -18,6 +20,14 @@ public class MemoryManager {
 	private int myNumberOfpageFaults = 0;
 	private int myPageReplacementAlgorithm = 0;
 	private Queue<Integer> fifoQ = new LinkedList<>();
+	private LinkedHashMap<Integer, Integer> LRUMap = new LinkedHashMap<>(myNumberOfFrames, 0.75f, true) { //idk what the 0.75f does but itll only work if its there so imma keep it
+    
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+  
+        return size() > myNumberOfFrames;
+    }
+};
 
 	public MemoryManager(int numberOfPages, int pageSize, int numberOfFrames, String pageFile,
 			int pageReplacementAlgorithm) {
@@ -147,10 +157,36 @@ public class MemoryManager {
 	}
 
 	private void handlePageFaultLRU(int pageNumber) {
-		// Implement by student in task three
-		// this solution allows different size of physical and logical memory
-		// page replacement using LRU
-		// Note depending on your solution, you might need to change parts of the
-		// supplied code, this is allowed.
+        int freeFrame = getFreeFrame();
+
+        // if no frame available :
+        if (freeFrame == -1) {
+            // linked hashmap maintains access order becuase of the way it was configured which means
+            // the most recently accessed entry is places at the end so the LRU will be first in the hashmap
+            int LRUPage = -1; 
+			for (Map.Entry<Integer, Integer> entry : LRUMap.entrySet()) {
+    			LRUPage = entry.getKey();
+   				break; 
+			}
+
+            // find the frame thats free
+            freeFrame = myPageTable[LRUPage];
+
+            // remove the page sicne we used it
+            myPageTable[LRUPage] = -1;
+
+            // remove from map
+            LRUMap.remove(LRUPage);
+        }
+
+        // update the selected frame
+        myPageTable[pageNumber] = freeFrame;
+
+        // insert into said frame
+        LRUMap.put(pageNumber, freeFrame);
+        readFromPageFileToMemory(pageNumber);
+
+		//incement
+        myNumberOfpageFaults++;
 	}
 }
